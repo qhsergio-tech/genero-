@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Espacio de Identidad de Género</title>
+
+<style>
+
+:root{
+  --rosa1:#fff0f6;
+  --rosa2:#ffd6e7;
+  --rosa3:#ffb3d1;
+  --rosa4:#ff8fbd;
+  --rosa5:#f06292;
+  --rosa6:#db4c86;
+  --rosa7:#b83268;
+  --texto:#6b2147;
+  --blanco:#ffffff;
+  --sombra:0 8px 24px rgba(184, 50, 104, 0.18);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background:var(--rosa1);
+  color:var(--texto);
+  display:flex;
+  min-height:100vh;
+}
+
+/* ===== BARRA LATERAL ===== */
+
+.sidebar{
+  width:260px;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(8px);
+  padding:25px 18px;
+  position:fixed;
+  top:0;
+  left:0;
+  height:100vh;
+  box-shadow:var(--sombra);
+  border-right:3px solid var(--rosa3);
+  z-index:1000;
+}
+
+.sidebar h2{
+  text-align:center;
+  color:var(--rosa7);
+  margin-bottom:10px;
+}
+
+.sidebar p{
+  text-align:center;
+  font-size:13px;
+  margin-bottom:20px;
+}
+
+.sidebar a{
+  display:block;
+  text-decoration:none;
+  background:white;
+  color:var(--rosa7);
+  padding:12px 15px;
+  margin:10px 0;
+  border-radius:12px;
+  font-weight:bold;
+  border:1px solid var(--rosa2);
+  transition:0.3s;
+  cursor:pointer;
+}
+
+.sidebar a:hover,
+.sidebar a.active{
+  background:var(--rosa4);
+  color:white;
+  transform:translateX(5px);
+}
+
+/* ===== CONTENIDO ===== */
+
+.main{
+  margin-left:260px;
+  width:calc(100% - 260px);
+}
+
+header{
+  text-align:center;
+  padding:55px 20px;
+  background:linear-gradient(135deg, white, var(--rosa2));
+  border-bottom:3px solid var(--rosa3);
+}
+
+header h1{
+  color:var(--rosa7);
+  margin-bottom:10px;
+}
+
+header h2{
+  font-weight:normal;
+}
+
+.seccion{
+  display:none;
+  padding:35px 25px;
+  animation:fade 0.4s ease;
+}
+
+.seccion.activa{
+  display:block;
+}
+
+@keyframes fade{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.titulo{
+  text-align:center;
+  font-size:32px;
+  margin-bottom:30px;
+  color:var(--rosa7);
+}
+
+.contenedor{
+  max-width:1100px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:22px;
+}
+
+/* ===== TARJETAS ===== */
+
+.tarjeta{
+  background:white;
+  border-radius:18px;
+  padding:25px;
+  text-align:center;
+  box-shadow:var(--sombra);
+  border:1px solid var(--rosa2);
+  transition:0.3s;
+  cursor:pointer;
+}
+
+.tarjeta:hover{
+  transform:translateY(-5px);
+  border-color:var(--rosa5);
+}
+
+.tarjeta img{
+  width:70px;
+  margin-bottom:15px;
+}
+
+.tarjeta h3{
+  margin-bottom:10px;
+  color:var(--rosa7);
+}
+
+/* ===== MODAL ===== */
+
+.modal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.45);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:3000;
+  padding:20px;
+}
+
+.modal-content{
+  background:white;
+  width:90%;
+  max-width:700px;
+  max-height:85vh;
+  overflow-y:auto;
+  border-radius:20px;
+  padding:35px;
+  position:relative;
+  animation:zoom 0.3s ease;
+}
+
+@keyframes zoom{
+  from{
+    transform:scale(0.8);
+    opacity:0;
+  }
+  to{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+
+.cerrar{
+  position:absolute;
+  top:15px;
+  right:20px;
+  font-size:30px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  color:var(--rosa7);
+}
+
+.modal-body h2{
+  color:var(--rosa7);
+  margin-bottom:15px;
+}
+
+.modal-body p{
+  line-height:1.7;
+  margin-bottom:15px;
+}
+
+.modal-body ul{
+  margin-left:20px;
+  line-height:1.7;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media(max-width:900px){
+
+  body{
+    display:block;
+  }
+
+  .sidebar{
+    width:100%;
+    height:auto;
+    position:relative;
+  }
+
+  .main{
+    width:100%;
+    margin-left:0;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ===== MODAL ===== -->
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+
+    <button class="cerrar" onclick="cerrarModal()">
+      &times;
+    </button>
+
+    <div id="contenidoModal" class="modal-body"></div>
+
+  </div>
+</div>
+
+<!-- ===== MENÚ ===== -->
+
+<aside class="sidebar">
+
+<h2>Identidad de Género</h2>
+<p>Espacio educativo e inclusivo</p>
+
+<a id="btn-conceptos" onclick="mostrarSeccion('conceptos')">
+Conceptos
+</a>
+
+<a id="btn-diversidad" onclick="mostrarSeccion('diversidad')">
+Diversidad
+</a>
+
+<a id="btn-respeto" onclick="mostrarSeccion('respeto')">
+Respeto e Inclusión
+</a>
+
+<a id="btn-apoyo" onclick="mostrarSeccion('apoyo')">
+Apoyo Escolar
+</a>
+
+</aside>
+
+<!-- ===== CONTENIDO PRINCIPAL ===== -->
+
+<main class="main">
+
+<section class="seccion activa" id="inicio">
+
+<header>
+<h1>ESPACIO DE IDENTIDAD DE GÉNERO</h1>
+<h2>Promoviendo el respeto, la igualdad y la inclusión</h2>
+</header>
+
+<div style="
+max-width:850px;
+margin:40px auto;
+background:white;
+padding:40px;
+border-radius:20px;
+text-align:center;
+box-shadow:var(--sombra);
+">
+
+<h3 style="margin-bottom:15px;">
+Bienvenido
+</h3>
+
+<p>
+Este espacio fue creado para informar y promover el respeto hacia la identidad de género, fomentando ambientes seguros, inclusivos y libres de discriminación.
+Selecciona una sección del menú y haz clic en las tarjetas para conocer más información.
+</p>
+
+</div>
+
+</section>
+
+<!-- ===== CONCEPTOS ===== -->
+
+<section class="seccion" id="conceptos">
+
+<h2 class="titulo">Conceptos Básicos</h2>
+
+<div class="contenedor">
+
+<div class="tarjeta" onclick="abrirInfo('identidad')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+
+<h3>Identidad de Género</h3>
+
+<p>
+Conoce qué significa y cómo se desarrolla.
+</p>
+
+</div>
+
+<div class="tarjeta" onclick="abrirInfo('expresion')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
+
+<h3>Expresión de Género</h3>
+
+<p>
+Descubre cómo las personas expresan su identidad.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===== DIVERSIDAD ===== -->
+
+<section class="seccion" id="diversidad">
+
+<h2 class="titulo">Diversidad y Respeto</h2>
+
+<div class="contenedor">
+
+<div class="tarjeta" onclick="abrirInfo('diversidad_genero')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/3898/3898082.png">
+
+<h3>Diversidad</h3>
+
+<p>
+La importancia de reconocer las diferencias.
+</p>
+
+</div>
+
+<div class="tarjeta" onclick="abrirInfo('derechos')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/2910/2910791.png">
+
+<h3>Derechos</h3>
+
+<p>
+Derechos y protección de todas las personas.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===== RESPETO ===== -->
+
+<section class="seccion" id="respeto">
+
+<h2 class="titulo">Respeto e Inclusión</h2>
+
+<div class="contenedor">
+
+<div class="tarjeta" onclick="abrirInfo('convivencia')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/4202/4202831.png">
+
+<h3>Convivencia</h3>
+
+<p>
+Cómo crear espacios seguros y respetuosos.
+</p>
+
+</div>
+
+<div class="tarjeta" onclick="abrirInfo('empatia')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png">
+
+<h3>Empatía</h3>
+
+<p>
+Promoviendo el respeto hacia todas las personas.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===== APOYO ===== -->
+
+<section class="seccion" id="apoyo">
+
+<h2 class="titulo">Apoyo Escolar</h2>
+
+<div class="contenedor">
+
+<div class="tarjeta" onclick="abrirInfo('docentes')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/2784/2784445.png">
+
+<h3>Docentes</h3>
+
+<p>
+Estrategias para apoyar la inclusión educativa.
+</p>
+
+</div>
+
+<div class="tarjeta" onclick="abrirInfo('familia')">
+
+<img src="https://cdn-icons-png.flaticon.com/512/3048/3048122.png">
+
+<h3>Familia</h3>
+
+<p>
+La importancia del apoyo familiar y emocional.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+<!-- ===== JAVASCRIPT ===== -->
+
+<script>
+
+/* ===== BASE DE DATOS ===== */
+
+const informacion = {
+
+identidad: {
+titulo: "¿Qué es la Identidad de Género?",
+contenido: `
+<p>
+La identidad de género en jóvenes de bachillerato se refiere a cómo cada estudiante se reconoce y expresa respecto a su género durante una etapa importante de desarrollo personal y social
+
+En la adolescencia muchos jóvenes comienzan a conocerse mejor explorar su personalidad emociones y forma de identificarse por lo que pueden surgir dudas cambios o mayor claridad sobre su identidad de género
+
+El entorno escolar influye mucho en este proceso ya que el respeto la inclusión y el apoyo de docentes compañeros y familia ayudan a que los estudiantes se sientan seguros y aceptados
+
+Cuando no existe comprensión pueden aparecer problemas como discriminación aislamiento baja autoestima ansiedad o dificultades emocionales
+
+Por eso es importante promover en las escuelas valores como el respeto la empatía la igualdad y la no discriminación para crear espacios seguros donde todos los estudiantes puedan desarrollarse libremente
+</p>
+`
+},
+
+expresion: {
+titulo: "Expresión de Género",
+contenido: `
+<p>
+La expresión de género es la forma en que una persona muestra su identidad a través de:
+</p>
+
+<ul>
+<li>La ropa.</li>
+<li>El comportamiento.</li>
+<li>El lenguaje.</li>
+<li>El estilo personal.</li>
+<li>La apariencia.</li>
+</ul>
+
+<p>
+Todas las expresiones merecen respeto y aceptación.
+</p>
+`
+},
+
+diversidad_genero: {
+titulo: "Diversidad de Género",
+contenido: `
+<p>
+La diversidad de género en jóvenes de bachillerato se refiere a la existencia de diferentes formas en las que los estudiantes pueden identificarse y expresar su género dentro del entorno escolar
+
+Durante la adolescencia los jóvenes desarrollan su identidad personal y social por lo que es común que descubran nuevas formas de expresarse sentirse o identificarse
+
+La convivencia con personas diversas ayuda a fortalecer valores como el respeto la empatía y la inclusión dentro de la escuela y la sociedad
+
+Un ambiente escolar positivo permite que los estudiantes se sientan seguros valorados y libres de expresar quiénes son sin miedo a la discriminación o el rechazo
+
+Cuando no existe respeto hacia la diversidad de género pueden surgir problemas como bullying exclusión baja autoestima estrés o dificultades emocionales y académicas
+
+Por eso es importante fomentar la igualdad la tolerancia y la educación inclusiva para crear espacios escolares seguros donde todos los estudiantes tengan las mismas oportunidades y derechos
+`
+},
+
+derechos: {
+titulo: "Derechos e Igualdad",
+contenido: `
+<p>
+Todas las personas tienen derecho a:
+</p>
+
+<ul>
+<li>Ser respetadas.</li>
+<li>Recibir igualdad de oportunidades.</li>
+<li>Vivir sin discriminación.</li>
+<li>Expresar libremente su identidad.</li>
+<li>Acceder a espacios seguros.</li>
+</ul>
+`
+},
+
+convivencia: {
+titulo: "Convivencia Inclusiva",
+contenido: `
+<p>
+La convivencia inclusiva promueve relaciones basadas en:
+</p>
+
+<ul>
+<li>Respeto.</li>
+<li>Empatía.</li>
+<li>Comunicación.</li>
+<li>Igualdad.</li>
+<li>Trabajo colaborativo.</li>
+</ul>
+
+<p>
+Escuchar y valorar a las demás personas fortalece la convivencia escolar y social.
+</p>
+`
+},
+
+empatia: {
+titulo: "Empatía y Respeto",
+contenido: `
+<p>
+La empatía y el respeto son valores fundamentales para una convivencia sana dentro de la escuela y la sociedad
+
+La empatía permite comprender los sentimientos pensamientos y experiencias de otras personas mientras que el respeto consiste en aceptar y valorar a cada individuo sin discriminación
+
+En jóvenes de bachillerato estos valores ayudan a fortalecer la inclusión la comunicación y las relaciones positivas entre compañeros
+
+Promover la empatía y el respeto contribuye a crear ambientes seguros donde todos los estudiantes puedan expresarse libremente sentirse aceptados y desarrollar confianza en sí mismos
+
+Además ayudan a prevenir conflictos bullying discriminación y problemas emocionales favoreciendo una convivencia basada en la igualdad y la tolerancia
+</p>
+`
+},
+
+docentes: {
+titulo: "Apoyo de los Docentes",
+contenido: `
+<p>
+Los docentes pueden promover la inclusión mediante:
+</p>
+
+<ul>
+<li>Lenguaje respetuoso.</li>
+<li>Actividades inclusivas.</li>
+<li>Ambientes seguros.</li>
+<li>Respeto a la diversidad.</li>
+<li>Prevención de la discriminación.</li>
+</ul>
+`
+},
+
+familia: {
+titulo: "Apoyo Familiar",
+contenido: `
+<p>
+El apoyo familiar es importante para el bienestar emocional y social de las personas.
+</p>
+
+<p>
+Escuchar, acompañar y respetar fortalece la confianza, autoestima y seguridad personal.
+</p>
+`
+}
+
+};
+
+/* ===== MOSTRAR SECCIONES ===== */
+
+function mostrarSeccion(id){
+
+document.querySelectorAll('.seccion').forEach(seccion=>{
+  seccion.classList.remove('activa');
+});
+
+document.getElementById(id).classList.add('activa');
+
+document.querySelectorAll('.sidebar a').forEach(btn=>{
+  btn.classList.remove('active');
+});
+
+document.getElementById('btn-' + id).classList.add('active');
+
+}
+
+/* ===== ABRIR MODAL ===== */
+
+function abrirInfo(clave){
+
+const datos = informacion[clave];
+
+if(datos){
+
+document.getElementById('contenidoModal').innerHTML = `
+<h2>${datos.titulo}</h2>
+${datos.contenido}
+`;
+
+document.getElementById('modal').style.display = 'flex';
+
+}
+
+}
+
+/* ===== CERRAR MODAL ===== */
+
+function cerrarModal(){
+
+document.getElementById('modal').style.display = 'none';
+
+}
+
+/* ===== CERRAR AL HACER CLICK FUERA ===== */
+
+window.onclick = function(event){
+
+const modal = document.getElementById('modal');
+
+if(event.target === modal){
+  cerrarModal();
+}
+
+}
+
+</script>
+
+</body>
+</html>
